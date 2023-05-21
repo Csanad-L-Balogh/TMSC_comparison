@@ -24,8 +24,17 @@ carla_speed = pd.read_csv('ego_speed_carla.csv')
 carla_traj = pd.read_csv('ego_trajec_carla.csv')
 sumo = pd.read_csv('sumo_logged.csv')
 # Correct the offset in the Carla data
-corrected_carla_heading = np.where(carla_heading.heading.values < 0, carla_heading.heading.values + 360,
-                                   carla_heading.heading.values)
+# corrected_carla_heading = np.where(carla_heading.heading.values < 0, carla_heading.heading.values + 360,
+#                                    carla_heading.heading.values)
+
+corrected_carla_heading = []
+for idx, val in enumerate(carla_heading.heading.values):
+    if -90 < val < 180:
+        corrected_carla_heading.append(val + 90)
+    else:
+        corrected_carla_heading.append(val + 450)
+corrected_carla_heading = np.array(corrected_carla_heading)
+
 sumo_x = sumo.x.values
 carla_x = carla_traj.loc_x.values + 503.02
 sumo_y = sumo.y.values
